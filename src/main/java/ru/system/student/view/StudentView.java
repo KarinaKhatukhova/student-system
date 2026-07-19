@@ -13,6 +13,20 @@ import static ru.system.student.utill.DateUtils.formatStringToDate;
 public class StudentView {
     public final static StudentController studentController = new StudentController();
 
+    public final static String passportSeriesRegex = "\\d{4}";
+    public final static String passportNumberRegex = "\\d{6}";
+    public final static String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
+    public final static String phoneNumberRegex = "^(?:\\+7|8)?9\\d{9}$";
+    public final static String enteredTextRegex = "[A-Za-zА-Яа-яЁё\\s-]{2,30}";
+    public final static String birthDateRegex = "\\d{4}-\\d{2}-\\d{2}";
+
+    public final static String passportSeriesMsgError = "Error! The series must consist of exactly 4 digits.";
+    public final static String passportNumberMsgError = "Error! The number must be exactly 6 digits long.";
+    public final static String emailMsgError = "Error! Invalid email format (example: student@faculty.com).";
+    public final static String phoneNumberMsgError = "Error! Please enter a valid Russian mobile phone number (e.g. +79123456789).";
+    public final static String enteredTextMsgError = "Error! The name must contain only letters and be between 2 and 30 characters long.";
+    public final static String birthDateMsgError = "Error! Invalid date format. Use YYYY-MM-DD.";
+
     public static void runInterface() {
         System.out.println("-----------------------------");
         System.out.println("1. Find student");
@@ -23,71 +37,69 @@ public class StudentView {
         try {
             choice = scanner.nextInt();
         } catch (NumberFormatException ex) {
-            System.out.println( "Enter correct data!");
-        runInterface();
-        }
-        if (choice == 1) {
-            String value = getStudent();
-            System.out.println(value);
-            runInterface();
-        } else if (choice == 2) {
-            boolean isDeleted = deleteStudent();
-            if(isDeleted) {
-                System.out.println("Student successfully deleted!");
-                runInterface();
-            } else {
-                System.out.println("Error deleting student!");
-                System.out.println("Check the data!");
-                runInterface();
-            }
-        } else if (choice == 3) {
-            boolean isSaved = saveStudent();
-            if(isSaved) {
-                System.out.println("Student successfully saved!");
-                runInterface();
-            } else {
-                System.out.println("Error saving student!");
-                System.out.println("Check the data!");
-                runInterface();
-            }
-        } else {
             System.out.println("Enter correct data!");
             runInterface();
+        }
+
+        switch (choice) {
+            case 0:
+                return;
+
+            case 1:
+                String value = getStudent();
+                System.out.println(value);
+                runInterface();
+                break;
+
+            case 2:
+                if (deleteStudent()) {
+                    System.out.println("Student successfully deleted!");
+                } else {
+                    System.out.println("Error deleting student!");
+                    System.out.println("Check the data!");
+                }
+                runInterface();
+                break;
+
+            case 3:
+                if (saveStudent()) {
+                    System.out.println("Student successfully saved!");
+                } else {
+                    System.out.println("Error saving student!");
+                    System.out.println("Check the data!");
+                }
+                runInterface();
+                break;
+
+            default:
+                System.out.println("Enter correct data!");
+                runInterface();
+                break;
         }
     }
 
     private static boolean saveStudent() {
         System.out.println("Enter passport series: ");
-        Scanner scanner = new Scanner(System.in);
-        String seria = scanner.nextLine();
+        String seria = dataScanner(passportSeriesRegex, passportSeriesMsgError);
         System.out.println("Enter passport number: ");
-        scanner = new Scanner(System.in);
-        String number = scanner.nextLine();
+        String number = dataScanner(passportNumberRegex, passportNumberMsgError);
         System.out.println("Enter address: ");
-        scanner = new Scanner(System.in);
-        String address = scanner.nextLine();
+        String address = dataScanner(enteredTextRegex , enteredTextMsgError);
         System.out.println("Enter name: ");
-        scanner = new Scanner(System.in);
-        String name = scanner.nextLine();
+        String name = dataScanner(enteredTextRegex, enteredTextMsgError);
         System.out.println("Enter lastname: ");
-        scanner = new Scanner(System.in);
-        String lastName = scanner.nextLine();
+        String lastName = dataScanner(enteredTextRegex, enteredTextMsgError);
         System.out.println("Enter birth date in yyyy-MM-dd format: ");
-        scanner = new Scanner(System.in);
-        String birthDate = scanner.nextLine();
+        String birthDate = dataScanner(birthDateRegex , birthDateMsgError);
         LocalDate birthDateFormated = formatStringToDate(birthDate);
         System.out.println("Enter birth place: ");
-        scanner = new Scanner(System.in);
-        String birthPlace = scanner.nextLine();
+        String birthPlace = dataScanner(enteredTextRegex, enteredTextMsgError);
         System.out.println("Enter faculty: ");
-        scanner = new Scanner(System.in);
-        String faculty = scanner.nextLine();
+        String faculty = dataScanner(enteredTextRegex, enteredTextMsgError);
         System.out.println("Enter phone number: ");
-        scanner = new Scanner(System.in);
-        String phoneNumber = scanner.nextLine();
+        String phoneNumber = dataScanner(phoneNumberRegex, phoneNumberMsgError);
         System.out.println("Enter e-mail: ");
-        scanner = new Scanner(System.in);
-        String eMail = scanner.nextLine();
+        String eMail = dataScanner(emailRegex, emailMsgError);
 
         SaveStudentDTO saveStudentDTO =
                 new SaveStudentDTO(name, lastName, seria, number,
@@ -97,25 +109,33 @@ public class StudentView {
 
     private static boolean deleteStudent() {
         System.out.println("Enter passport series: ");
-        Scanner scanner = new Scanner(System.in);
-        String seria = scanner.nextLine();
+        String seria = dataScanner(passportSeriesRegex , passportSeriesMsgError);
         System.out.println("Enter passport number: ");
-        scanner = new Scanner(System.in);
-        String number = scanner.nextLine();
+        String number = dataScanner(passportNumberRegex, passportNumberMsgError);
         DeleteStudentDTO deleteStudentDTO = new DeleteStudentDTO(seria, number);
         return studentController.deleteStudent(deleteStudentDTO);
-
     }
 
     private static String getStudent() {
         System.out.println("Enter passport series: ");
-        Scanner scanner = new Scanner(System.in);
-        String seria = scanner.nextLine();
+        String seria = dataScanner(passportSeriesRegex, passportSeriesMsgError);
         System.out.println("Enter passport number: ");
-        scanner = new Scanner(System.in);
-        String number = scanner.nextLine();
+        String number = dataScanner(passportNumberRegex, passportNumberMsgError);
         GetStudentDTO getStudentDTO = new GetStudentDTO(seria, number);
         return studentController.getStudent(getStudentDTO);
+    }
 
+    private static String dataScanner(String regex, String errorMessage) {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            String input = scanner.nextLine().trim();
+
+            if (input.matches(regex)) {
+                return input;
+            }
+
+            System.out.println(errorMessage);
+            System.out.print("Попробуйте еще раз: ");
+        }
     }
 }

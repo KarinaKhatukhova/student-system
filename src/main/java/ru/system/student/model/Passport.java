@@ -9,20 +9,19 @@ import java.util.Objects;
 @Setter
 @ToString
 @AllArgsConstructor
-@NoArgsConstructor
 public class Passport {
-
-    private String name;
-
-    private String lastName;
-
-    private LocalDate birthDate;
-
-    private String birthPlace;
-
-    private String seria;
-
-    private String number;
+    @NonNull
+    private final String name;
+    @NonNull
+    private final String lastName;
+    @NonNull
+    private final LocalDate birthDate;
+    @NonNull
+    private final String birthPlace;
+    @NonNull
+    private final String seria;
+    @NonNull
+    private final String number;
 
     @Override
     public boolean equals(Object o) {

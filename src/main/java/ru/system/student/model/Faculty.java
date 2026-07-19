@@ -6,13 +6,12 @@ import lombok.*;
 @Setter
 @ToString
 @AllArgsConstructor
-@NoArgsConstructor
 public class Faculty {
-
+    @NonNull
     private String name;
-
+    @NonNull
     private String phoneNumber;
-
+    @NonNull
     private String eMail;
 
 }

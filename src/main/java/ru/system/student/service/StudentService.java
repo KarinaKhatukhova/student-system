@@ -1,7 +1,6 @@
 package ru.system.student.service;
 
 import ru.system.student.model.Faculty;
-import ru.system.student.model.Student;
 
 import java.time.LocalDate;
 

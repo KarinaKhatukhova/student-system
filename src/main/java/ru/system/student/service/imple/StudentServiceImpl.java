@@ -7,7 +7,6 @@ import ru.system.student.service.StudentService;
 
 import java.time.LocalDate;
 
-import static ru.system.student.database.Database.FACULTIES;
 import static ru.system.student.database.Database.STUDENTS;
 
 public class StudentServiceImpl implements StudentService {

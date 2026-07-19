@@ -26,14 +26,13 @@ public class StudentController {
 
 
     public boolean deleteStudent(DeleteStudentDTO studentDTO) {
-        if (studentDTO.getSeria().length() != 4) {
-            return false;
-        }
-        if (studentDTO.getNumber().length() != 6) {
-            return false;
-        }
-        return studentService.deleteStudent(studentDTO.getSeria(), studentDTO.getNumber());
+        String validationError = validateSeriaAndNumber(studentDTO.getNumber(), studentDTO.getSeria());
 
+        if (validationError != null) {
+            return false;
+        }
+
+        return studentService.deleteStudent(studentDTO.getSeria(), studentDTO.getNumber());
     }
 
     public boolean saveStudent(SaveStudentDTO saveStudentDTO) {
